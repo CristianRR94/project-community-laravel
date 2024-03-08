@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usuarios', function (Blueprint $table) {
-            $table->id();
-            $table->string("nombre");
-            $table->string("email");
-            $table->string("contrasena");
-            $table->timestamps();
+        Schema::table('usuarios', function (Blueprint $table) {
+            //
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('usuarios', function (Blueprint $table) {
+            //
+        });
     }
 };
