@@ -12,6 +12,6 @@ class Usuario extends Model
     protected $fillable = [
         "nombre",
         "email",
-        "contrasena",
+        "contrasena"
     ];
 }
