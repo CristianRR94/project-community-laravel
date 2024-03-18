@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usuarios', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("email");
-            $table->string("password");
-            $table->timestamps();
+        //
+        Schema::table('usuarios', function (Blueprint $table) {
+            $table->string('apiToken', 80)->after('password')
+                        ->unique()
+                        ->nullable()
+                        ->default(null);
         });
     }
 
@@ -26,5 +26,10 @@ return new class extends Migration
     public function down(): void
     {
         //
+        Schema::table('usuarios', function (Blueprint $table) {
+            $table->dropColumn('apiToken');
+        });
     }
+
+
 };

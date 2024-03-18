@@ -3,20 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Usuario;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+//use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 
 class UsuarioControlador extends Controller
 {
     // LIST
     public function usuarios(Request $request){
         $usuarios=Usuario::all();
-       /*  $data = [
-            "status" => 200,
-            "ususarios" => $usuarios,
-        ]; */
         if ($usuarios -> count() > 0){
             return response()->json([
                 "status" => 200,
@@ -35,9 +36,9 @@ class UsuarioControlador extends Controller
     //CREATE
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            "nombre" => "required|string|max:20",
+            "name" => "required|string|max:20",
             "email" => "required|email",
-            "contrasena" => "required|string"
+            "password" => "required|string"
         ]);
         if ($validator-> fails()){
             return response()->json([
@@ -47,9 +48,9 @@ class UsuarioControlador extends Controller
         }
         else {
             $usuario = Usuario::create([
-                "nombre" => $request -> nombre,
+                "name" => $request -> name,
                 "email" => $request -> email,
-                "contrasena" => $request -> contrasena
+                "password" => Hash::make($request -> password)
             ]);
 
             if($usuario){
@@ -104,9 +105,9 @@ class UsuarioControlador extends Controller
     //UPDATE - 2
     public function update(Request $request, int $id){
         $validator = Validator::make($request->all(), [
-            "nombre" => "required|string|max:20",
+            "name" => "required|string|max:20",
             "email" => "required|email",
-            "contrasena" => "required|string"
+            "password" => "required|string"
         ]);
         if ($validator-> fails()){
             return response()->json([
@@ -119,9 +120,9 @@ class UsuarioControlador extends Controller
 
             if($usuario){
                 $usuario -> update([
-                    "nombre" => $request -> nombre,
+                    "name" => $request -> name,
                     "email" => $request -> email,
-                    "contrasena" => $request -> contrasena
+                    "password" => Hash::make($request -> password)
                 ]);
 
                 return response() -> json([
@@ -156,5 +157,42 @@ class UsuarioControlador extends Controller
             ], 404);
         }
     }
-}
+
+
+    //LOGIN
+    public function autenticar(Request $request): JsonResponse{
+         $credentials = $request -> validate ([
+            "name" => ["required"],
+            "password" => ["required"]
+        ]);
+        $usuario = Usuario::where('name', $credentials['name'])->first();
+        if ($usuario && Hash::check($credentials['password'], $usuario->password)) {
+
+            $token = Str::random(60);
+            $usuario->forceFill([
+                "apiToken" => hash("sha256", $token),
+            ])->save();
+
+            return response()->json(["token" => $token]);
+        }
+        else{
+            return response()-> json([
+                "status" => 401,
+                "mensaje" => "Usuario erróneo"
+            ], 401);
+        }
+    }
+
+
+    //LOGOUT
+    public function logout(Request $request){
+        Auth::logout();
+
+        $request -> session() -> invalidate();
+        $request -> session() -> regenerateToken();
+
+        return redirect(route(`localhost://4200`));
+    }
+    }
+
 

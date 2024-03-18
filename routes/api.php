@@ -14,3 +14,5 @@ Route::get("usuarios/{id}",[UsuarioControlador::class, "leer"]);
 Route::get("usuarios/editar/{id}",[UsuarioControlador::class, "editar"]);
 Route::put("usuarios/editar/{id}",[UsuarioControlador::class, "update"]);
 Route::delete("usuarios/eliminar/{id}",[UsuarioControlador::class, "eliminar"]);
+Route::post("autenticar", [UsuarioControlador::class, "autenticar"]);
+Route::post("logout", [UsuarioControlador::class, "logout"]);
