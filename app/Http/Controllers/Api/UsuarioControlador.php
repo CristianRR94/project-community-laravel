@@ -184,7 +184,7 @@ class UsuarioControlador extends Controller
     }
 
 
-    //LOGOUT
+    //LOGOUT (cambiar)
     public function logout(Request $request){
         Auth::logout();
 
