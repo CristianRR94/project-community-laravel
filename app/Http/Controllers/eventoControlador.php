@@ -110,4 +110,21 @@ class EventoControlador extends Controller
             ], 404);
         }
     }
+
+    //Ver evento (singular)
+    public function leer($id){
+        $usuario = Evento::find($id);
+        if($usuario){
+            return response()->json([
+                "status" => 200,
+                "usuario" => $evento
+            ], 200);
+        }
+        else{
+            return response() -> json([
+                "status" => 404,
+                "mensaje" => "Evento no encontrado"
+            ], 404);
+        }
+    }
 }
