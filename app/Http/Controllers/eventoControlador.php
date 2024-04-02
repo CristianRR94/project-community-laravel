@@ -14,7 +14,7 @@ class EventoControlador extends Controller
             "tipo" => $request -> tipo,
             "asistencia" => $request -> asistencia,
             "fecha" => $request -> fecha,
-            "personas" => json_encode($request -> personas),
+            "participantes" => json_encode($request -> participantes),
             "elementos" => json_encode($request -> elementos),
         ]);
 
@@ -56,7 +56,7 @@ class EventoControlador extends Controller
             "tipo" => "required|string",
             "asistencia" => "required|boolean",
             "fecha" => "required|date",
-            "personas" => "required|array",
+            "participantes" => "required|array",
             "elementos" => "required|array",
         ]);
         if ($validator-> fails()){
@@ -74,7 +74,7 @@ class EventoControlador extends Controller
                     "tipo" => $request -> tipo,
                     "asistencia" => $request -> asistencia,
                     "fecha" => $request -> fecha,
-                    "personas" => json_encode($request -> personas),
+                    "participantes" => json_encode($request -> participantes),
                     "elementos" => json_encode($request -> elementos),
                 ]);
 
