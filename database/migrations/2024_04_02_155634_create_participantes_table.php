@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('eventos', function (Blueprint $table) {
+        Schema::connection(`mysql2`)->create('participantes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId(`evento_id`)->constrained(`eventos`);
+            
+            $table->string("participante");
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('eventos');
+        Schema::dropIfExists('participantes');
     }
 };

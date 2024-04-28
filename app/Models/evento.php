@@ -9,6 +9,7 @@ class Evento extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
         /*  id: number,
   nombre: string,
