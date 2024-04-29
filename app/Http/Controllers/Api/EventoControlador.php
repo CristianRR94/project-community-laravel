@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use app\Models\evento;
+use app\Models\Evento;
 
 class EventoControlador extends Controller
 {

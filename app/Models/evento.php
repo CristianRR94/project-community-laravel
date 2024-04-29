@@ -25,7 +25,7 @@ class Evento extends Model
   "imagen",
   "asistencia",
   "fecha",
-  "participantes",
+  //"participantes",
   "elementos",
 
     ];

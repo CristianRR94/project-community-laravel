@@ -27,3 +27,4 @@ Route::delete("evento/eliminar/{id}",[EventoControlador::class, "eliminar"]);
 Route::get("evento/{id}",[EventoControlador::class, "leer"]);
 
 
+
