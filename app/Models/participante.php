@@ -12,4 +12,9 @@ class Participante extends Model
     protected $fillable = [
         "participante"
     ];
+
+     //establecer conexion participantes - evento n:m
+     public function eventos(){
+        return $this->belongsToMany(Evento::class, "participante");
+    }
 }

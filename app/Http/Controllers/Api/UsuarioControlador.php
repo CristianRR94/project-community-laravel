@@ -168,6 +168,8 @@ class UsuarioControlador extends Controller
         $usuario = Usuario::where('name', $credentials['name'])->first();
         if ($usuario && Hash::check($credentials['password'], $usuario->password)) {
 
+            //crear token (nueva columna)
+
             $token = Str::random(60);
             $usuario->forceFill([
                 "apiToken" => hash("sha256", $token),

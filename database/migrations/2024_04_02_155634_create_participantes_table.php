@@ -10,12 +10,12 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::connection(`mysql2`)->create('participantes', function (Blueprint $table) {
+    {   //!! - hay que terminar la migracion
+        //obtener nombre de usuario de tabla usuario a través de la id
+        Schema::connection("mysql2")->create("participantes", function (Blueprint $table) {
             $table->id();
-            $table->foreignId(`evento_id`)->constrained(`eventos`);
-            
-            $table->string("participante");
+            $table->foreignId("evento_id")->constrained("eventos");
+            $table->foreignId("usuario_id")->constrained("usuarios");
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('participantes');
+        Schema::dropIfExists("participantes");
     }
 };

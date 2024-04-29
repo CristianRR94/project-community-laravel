@@ -19,8 +19,5 @@ class Usuario extends Model
     protected $hidden = [
         "password",
     ];
-    //relacion de conexion usuarios - evento
-    /*public function eventos(){
-        return $this->belongsToMany(Evento::class, "participante");
-    }*/
+
 }

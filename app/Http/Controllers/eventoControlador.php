@@ -14,11 +14,21 @@ class EventoControlador extends Controller
             "tipo" => $request -> tipo,
             "asistencia" => $request -> asistencia,
             "fecha" => $request -> fecha,
-            "participantes" => json_encode($request -> participantes),
+            //"participantes" => json_encode($request -> participantes),
             "elementos" => json_encode($request -> elementos),
         ]);
-
+        //!! ver - analizar implicaciones en introduccion de participantes
         if($evento){
+            foreach($request->participantes as $nombreUsuario){
+            $usuario = Usuario::where("apiToken", $request->bearerToken()->first());
+
+                if($usuario){
+                    $participante = new Participante;
+                    $participante-> usuario_id = $usuario->id;
+                    $participante-> evento_id = $evento->id;
+                    $participante->save();
+                }
+            }
             return response() -> json([
                 "status" => 200,
                 "mensaje" => "Evento creado correctamente"
