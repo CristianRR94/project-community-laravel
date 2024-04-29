@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use app\Models\Evento;
+use App\Models\Evento;
+use App\Http\Controllers\Controller;
 
 class EventoControlador extends Controller
 {
-    //Crear evento
+    //Crear evento    la api furrula, ahora solo queda conectar todo
+
     public function evento(Request $request){
         $evento = Evento::create([
             "nombre" => $request -> nombre,
@@ -18,9 +20,11 @@ class EventoControlador extends Controller
             "elementos" => json_encode($request -> elementos),
         ]);
         //!! ver - analizar implicaciones en introduccion de participantes
-        if($evento){
-            foreach($request->participantes as $nombreUsuario){
-            $usuario = Usuario::where("apiToken", $request->bearerToken()->first());
+       /* if($evento){
+
+           // foreach($request->participantes as $nombreUsuario){
+                //creador del evento metido directamente
+           // $usuario = Usuario::where("apiToken", $request->bearerToken()->first());
 
                 if($usuario){
                     $participante = new Participante;
@@ -34,14 +38,14 @@ class EventoControlador extends Controller
                 "mensaje" => "Evento creado correctamente"
             ], 200);
         }
-        else{
-            return response() -> json([
-                "status" => 500,
-                "mensaje" => "Ha habido un error"
-            ], 500);
-        }
-    }
-
+       // else{
+       //    return response() -> json([
+       //    "status" => 500,
+       //         "mensaje" => "Ha habido un error"
+       //     ], 500);
+       // }
+    //}*/
+       }
     //Ver eventos
     public function verEvento(Request $requets){
         $evento=Evento::all();
