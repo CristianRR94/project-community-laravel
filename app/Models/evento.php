@@ -12,14 +12,6 @@ class Evento extends Model
     protected $connection = "mysql";
 
     protected $fillable = [
-        /*  id: number,
-  nombre: string,
-  tipo: string,
-  imagen: string,
-  asistencia: boolean,
-  fecha: Date,
-  personas: string[],
-  elementos: string[], */
 
   "nombre",
   "tipo",

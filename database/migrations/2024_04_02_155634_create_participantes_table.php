@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    protected $connection = "mysql2";
+    protected $connection = "mysql";
     /**
      * Run the migrations.
      */
     public function up(): void
     {   //!! - hay que terminar la migracion
         //obtener nombre de usuario de tabla usuario a través de la id
-        Schema::connection("mysql2")->create("participantes", function (Blueprint $table) {
+        Schema::connection("mysql")->create("participantes", function (Blueprint $table) {
             $table->id();
             $table->string("participante");
             $table->foreignId("evento_id")->constrained("eventos");
