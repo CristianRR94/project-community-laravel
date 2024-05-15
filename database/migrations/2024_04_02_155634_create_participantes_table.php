@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected $connection = "mysql2";
     /**
      * Run the migrations.
      */
@@ -14,6 +15,7 @@ return new class extends Migration
         //obtener nombre de usuario de tabla usuario a través de la id
         Schema::connection("mysql2")->create("participantes", function (Blueprint $table) {
             $table->id();
+            $table->string("participante");
             $table->foreignId("evento_id")->constrained("eventos");
             $table->foreignId("usuario_id")->constrained("usuarios");
             $table->timestamps();

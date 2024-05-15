@@ -5,21 +5,17 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
+//tabla intermedia entre participantes y eventos
 {
-    protected $connection = "mysql";
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('eventos', function (Blueprint $table) {
+        Schema::create('_eventoparticipantes', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre");
-            $table->string("tipo");
-            $table->boolean("asistencia");
-            $table->date("fecha");
-           // $table->array("participantes");
-            $table->json("elementos");
+            $table->foreignId("evento_id")->constrained(); //toma el id de tabla eventos
+            $table->foreignId("participantes_id")->constrained(); //toma el id de tabla participantes
             $table->timestamps();
         });
     }
@@ -29,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('eventos');
+        Schema::dropIfExists('_eventoparticipantes');
     }
-
-
 };

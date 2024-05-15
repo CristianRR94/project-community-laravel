@@ -26,5 +26,7 @@ Route::put("evento/editar/{id}",[EventoControlador::class, "editar"]);
 Route::delete("evento/eliminar/{id}",[EventoControlador::class, "eliminar"]);
 Route::get("evento/{id}",[EventoControlador::class, "leer"]);
 
+//participante
+Route::post("participante",[ParticipanteControlador::class, "addParticipante"]);
 
 

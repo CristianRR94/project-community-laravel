@@ -47,12 +47,25 @@ class UsuarioControlador extends Controller
             ],422);
         }
         else {
+            if (Usuario::where("name", $request->name)->exists()){
+                return response()->json([
+                    "status" => 500,
+                    "mensaje"=> "Nombre ya en uso"
+                ], 500);
+            }
+            else if (Usuario::where("email", $request->email)->exists()){
+                return response()->json([
+                    "status" => 500,
+                    "mensaje"=> "Email ya en uso"
+                ], 500);
+            }
+            else{
             $usuario = Usuario::create([
                 "name" => $request -> name,
                 "email" => $request -> email,
                 "password" => Hash::make($request -> password)
             ]);
-
+            }
             if($usuario){
                 return response() -> json([
                     "status" => 200,
@@ -139,7 +152,7 @@ class UsuarioControlador extends Controller
         }
     }
 
-    //DELETE
+    //DELETE (deberia detectar la id d la sesion directamente)
     public function eliminar($id){
         $usuario = Usuario::find($id);
 
@@ -193,8 +206,8 @@ class UsuarioControlador extends Controller
         $request -> session() -> invalidate();
         $request -> session() -> regenerateToken();
 
-        return redirect(route(`localhost://4200`));
+        return redirect(route('localhost://4200'));
     }
-    }
+}
 
 

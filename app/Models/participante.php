@@ -9,6 +9,8 @@ class Participante extends Model
 {
     use HasFactory;
 
+    protected $connection = "mysql2";
+
     protected $fillable = [
         "participante"
     ];

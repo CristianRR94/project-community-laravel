@@ -9,7 +9,7 @@ class Evento extends Model
 {
     use HasFactory;
 
-    protected $connection = "mysql2";
+    protected $connection = "mysql";
 
     protected $fillable = [
         /*  id: number,
