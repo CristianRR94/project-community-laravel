@@ -141,4 +141,29 @@ class EventoControlador extends Controller
             ], 404);
         }
     }
+
+    //añadir participantes (no comprobado)
+    public function addParticipante(Request $request, Evento $evento) {
+        if (is_array($request->participantes)) {
+            foreach ($request->participantes as $participante_nombre){
+                $participante = Participante::where("participante", $participante_nombre)->first();
+                if ($participante){
+                    $evento->participantes()->attach($participante);
+                }
+                else {
+                    return response() -> json([
+                        "status" => 404,
+                        "mensaje" => "Participante no encontrado"
+                    ], 404);
+                }
+            }
+        }
+        else {
+            return response() -> json([
+                "status" => 500,
+                "mensaje" => "Ha habido un error"
+            ], 500);
+        }
+        return redirect()->route("evento.show", $evento);
+    }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('_eventoparticipantes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("evento_id")->constrained(); //toma el id de tabla eventos
+            $table->foreignId("evento_id")->nullable()->constrained(); //toma el id de tabla eventos
             $table->foreignId("participantes_id")->constrained(); //toma el id de tabla participantes
             $table->timestamps();
         });
@@ -26,5 +26,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('_eventoparticipantes');
-    }
+
+    Schema::table('_eventoparticipantes', function (Blueprint $table) {
+        $table->dropColumn('evento_id');
+    });
+}
 };

@@ -11,7 +11,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get("usuarios",[UsuarioControlador::class, "usuarios"]);
-Route::post("usuarios",[UsuarioControlador::class, "login"]);
+Route::post("usuarios",[UsuarioControlador::class, "crearUsuario"]);
 Route::get("usuarios/{id}",[UsuarioControlador::class, "leer"]);
 Route::get("usuarios/editar/{id}",[UsuarioControlador::class, "editar"]);
 Route::put("usuarios/editar/{id}",[UsuarioControlador::class, "update"]);
@@ -28,5 +28,6 @@ Route::get("evento/{id}",[EventoControlador::class, "leer"]);
 
 //participante
 Route::post("participante",[ParticipanteControlador::class, "addParticipante"]);
+Route::get("participante",[ParticipanteControlador::class, "verParticipantes"]);
 
 

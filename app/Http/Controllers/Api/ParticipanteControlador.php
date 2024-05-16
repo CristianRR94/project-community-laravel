@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class ParticipanteControlador extends Controller
 {
     // Añadir participante
-    public function addParticipante(Request $request){
+   /*  public function addParticipante(Request $request){
         //añadir comprobación participante - usuario
 
 
@@ -26,6 +26,23 @@ class ParticipanteControlador extends Controller
                 "status" => 500,
                 "mensaje" => "Ha habido un error"
             ]);
+        }
+    } */
+
+    //LIST
+    public function verParticipantes(Request $request){
+        $participantes=Participante::all();
+        if ($participantes -> count() > 0){
+            return response()->json([
+                "status" => 200,
+                "mensaje" => $participantes
+             ], 200);
+        }
+        else {
+            return response()->json([
+                "status" => 404,
+                "mensaje" => "Sin informacion"
+             ], 200);
         }
     }
 }

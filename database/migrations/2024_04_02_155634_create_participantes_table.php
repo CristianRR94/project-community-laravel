@@ -16,10 +16,14 @@ return new class extends Migration
         Schema::connection("mysql")->create("participantes", function (Blueprint $table) {
             $table->id();
             $table->string("participante");
-            $table->foreignId("evento_id")->constrained("eventos");
+            //$table->foreignId("evento_id")->constrained("eventos");
             $table->foreignId("usuario_id")->constrained("usuarios");
             $table->timestamps();
         });
+
+        /* Schema::table('participantes', function (Blueprint $table) {
+            $table->foreignId("evento_id")->default(1)->change();
+        }); */
     }
 
     /**
@@ -28,5 +32,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists("participantes");
+        Schema::table('participantes', function (Blueprint $table) {
+            $table->dropColumn('evento_id');
+        });
     }
 };

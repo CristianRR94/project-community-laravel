@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Auth;
 //use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\Participante;
 
 class UsuarioControlador extends Controller
 {
@@ -34,7 +35,7 @@ class UsuarioControlador extends Controller
     }
 
     //CREATE
-    public function login(Request $request){
+    public function crearUsuario(Request $request){
         $validator = Validator::make($request->all(), [
             "name" => "required|string|max:20",
             "email" => "required|email",
@@ -60,23 +61,40 @@ class UsuarioControlador extends Controller
                 ], 500);
             }
             else{
-            $usuario = Usuario::create([
-                "name" => $request -> name,
-                "email" => $request -> email,
-                "password" => Hash::make($request -> password)
-            ]);
-            }
-            if($usuario){
-                return response() -> json([
-                    "status" => 200,
-                    "mensaje" => "Usuario creado correctamente"
-                ], 200);
-            }
-            else{
-                return response() -> json([
-                    "status" => 500,
-                    "mensaje" => "Ha habido un error"
-                ], 500);
+                $usuario=null;
+                $participante=null;
+                DB::transaction(function () use ($request, &$usuario, &$participante){ //uso de & para pasar variables por referencia (modifica el valor)
+                    //si algo no funciona no se crea nada
+                    $usuario = Usuario::create([
+                        "name" => $request -> name,
+                        "email" => $request -> email,
+                        "password" => Hash::make($request -> password)
+                    ]);
+                    //añadir usuario a participantes
+                    $participante = Participante::create([
+                        "usuario_id"=>$usuario->id,
+                        "participante"=>$usuario->name
+                        //"evento_id"=> null
+                    ]);
+                });
+                if(!$usuario){
+                    return response() -> json([
+                        "status" => 500,
+                        "mensaje" => "Error al crear usuario"
+                    ], 500);
+                }
+                else if (!$participante){
+                    return response() -> json([
+                        "status" => 500,
+                        "mensaje" => "Error al crear participante"
+                    ], 500);
+                }
+                else{
+                    return response() -> json([
+                        "status" => 200,
+                        "mensaje" => "Usuario y participante creados correctamente"
+                    ], 200);
+                }
             }
         }
     }
