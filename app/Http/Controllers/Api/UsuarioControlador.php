@@ -34,12 +34,12 @@ class UsuarioControlador extends Controller
 
     }
 
-    //CREATE
+    //CREATE (correcto)--------------------------------------------------------------------------------------------------------------------------------------------
     public function crearUsuario(Request $request){
         $validator = Validator::make($request->all(), [
             "name" => "required|string|max:20",
             "email" => "required|email",
-            "password" => "required|string"
+            "password" => "required|string|min:6"
         ]);
         if ($validator-> fails()){
             return response()->json([
@@ -50,9 +50,9 @@ class UsuarioControlador extends Controller
         else {
             if (Usuario::where("name", $request->name)->exists()){
                 return response()->json([
-                    "status" => 500,
+                    "status" => 409,
                     "mensaje"=> "Nombre ya en uso"
-                ], 500);
+                ], 409);
             }
             else if (Usuario::where("email", $request->email)->exists()){
                 return response()->json([
@@ -138,7 +138,7 @@ class UsuarioControlador extends Controller
         $validator = Validator::make($request->all(), [
             "name" => "required|string|max:20",
             "email" => "required|email",
-            "password" => "required|string"
+            "password" => "required|string|min:6"
         ]);
         if ($validator-> fails()){
             return response()->json([
@@ -170,7 +170,80 @@ class UsuarioControlador extends Controller
         }
     }
 
-    //DELETE (deberia detectar la id d la sesion directamente)
+    //funcion a la que llamar para hacer update
+    protected function cambiarUsuario($usuario, $request){
+        $usuario -> update([
+            "name" => $request -> name,
+            "email" => $request -> email,
+            "password" => Hash::make($request -> password)
+        ]);
+    }
+
+    //UPDATE desde la propia sesion(correcto)--------------------------------------------------------------------------------------------------------------------
+    public function actualizar(Request $request){
+        $validator = Validator::make($request->all(), [
+            "name" => "required|string|max:20",
+            "email" => "required|email",
+            "password" => "required|string|min:6"
+        ]);
+        if ($validator-> fails()){
+            return response()->json([
+                "status" => 422,
+                "errores" => $validator -> messages()
+            ],422);
+        }
+        else {
+            $token = $request->bearerToken();
+            $usuario = Usuario::where("apiToken", hash("sha256", $token))->first();
+            $participante = Participante::where("usuario_id", $usuario->id)->first();
+            $usuarioActual = Usuario::where("name", $request->name)->first();
+            $emailActual = Usuario::where("email", $request->email)->first();
+            //nombre o mail en uso
+            if($usuario->where("name", $request->name)->exists() || $usuario->where("email", $request->email)->exists()){
+                if($usuarioActual && $usuarioActual->id != $usuario->id){
+                    return response()->json([
+                        "status"=> 409,
+                        "mensaje"=> "Nombre de usuario ya en uso"
+                    ], 409);
+                }
+                else if ($emailActual && $emailActual->id != $usuario->id){
+                    return response()->json([
+                        "status"=> 409,
+                        "mensaje"=> "Email ya en uso"
+                    ], 409);
+                }
+                //mismo nombre o email que tenía el usuario
+                else{
+                    $this->cambiarUsuario($usuario, $request);
+                    $participante->update([
+                        "participante"=>$usuario->name
+                    ]);
+                    return response() -> json([
+                        "status" => 200,
+                        "mensaje" => "Usuario editado correctamente"
+                    ], 200);
+                }
+            }
+            else if($usuario){
+                $this->cambiarUsuario($usuario, $request);
+                $participante->update([
+                    "participante"=>$usuario->name
+                ]);
+                return response() -> json([
+                    "status" => 200,
+                    "mensaje" => "Usuario editado correctamente"
+                ], 200);
+            }
+            else{
+                return response() -> json([
+                    "status" => 404,
+                    "mensaje" => "usuario no encontrado"
+                ], 404);
+            }
+        }
+    }
+
+    //DELETE
     public function eliminar($id){
         $usuario = Usuario::find($id);
 
@@ -189,8 +262,39 @@ class UsuarioControlador extends Controller
         }
     }
 
+    //DELETE desde la propia sesion (correcto) ---------------------------------------------------------------------------------------------------------------------
+    public function eliminarUsuario(Request $request){
+        $token = $request->bearerToken();
+        $usuario = Usuario::where("apiToken", hash("sha256", $token))->first();
 
-    //LOGIN
+        if($usuario){
+            $id = $usuario->id;
+            $participante = Participante::where("usuario_id", $id)->first();
+            if($participante){
+                $participante -> delete();
+            }
+            else {
+                return response()->json([
+                    "status" => 500,
+                    "mensaje" => "Ha habido un error"
+                ]);
+            }
+                $usuario -> delete();
+                //$request -> session() -> invalidate();
+
+                return response()->json([
+                    "mensaje" => "Usuario eliminado correctamente"
+                ], 200);
+        }
+        else{
+            return response() -> json([
+                "status" => 404,
+                "mensaje" => "usuario no encontrado"
+            ], 404);
+        }
+    }
+
+    //LOGIN --------------------------------------------------------------------------------------------------------------------------------------------------------
     public function autenticar(Request $request): JsonResponse{
          $credentials = $request -> validate ([
             "name" => ["required"],
@@ -217,14 +321,26 @@ class UsuarioControlador extends Controller
     }
 
 
-    //LOGOUT (cambiar)
+    //LOGOUT (pendiente de comprobación)
     public function logout(Request $request){
-        Auth::logout();
+      $token = $request->bearerToken();
+      $usuario = Usuario::where("apiToken", hash("sha256", $token))->first();
+      if($usuario){
+        $usuario->forceFill([
+            "apiToken" => null
+        ])->save();
 
-        $request -> session() -> invalidate();
-        $request -> session() -> regenerateToken();
-
-        return redirect(route('localhost://4200'));
+        return response()-> json([
+            "status" => 200,
+            "mensaje" => "Sesión cerrada"
+        ], 200);
+      }
+      else {
+        return response()-> json([
+            "status" => 500,
+            "mensaje" => "Error en el cierre de sesión"
+        ], 500);
+      }
     }
 }
 

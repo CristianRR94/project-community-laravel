@@ -13,18 +13,18 @@ class Evento extends Model
 
     protected $fillable = [
 
-  "nombre",
-  "tipo",
-  "imagen",
-  "asistencia",
-  "fecha",
-  //"participantes",
-  "elementos",
+        "nombre",
+        "tipo",
+        "imagen",
+        "asistencia",
+        "fecha",
+        //"participantes",
+        "elementos",
 
     ];
     //establecer conexion evento - participantes
     // participante como los usuarios registrados entre las bases de datos
     public function participantes(){
-        return $this -> belongsToMany(Participante::class, "participante");
+        return $this -> belongsToMany(Participante::class, "evento_participante");
     }
 }

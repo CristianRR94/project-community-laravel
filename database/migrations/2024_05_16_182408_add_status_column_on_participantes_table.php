@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('evento_participantes', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('participantes', function (Blueprint $table) {
+            //
+            $table->foreignId("usuario_id")->constrained()->nullable();
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('evento_participantes');
+        Schema::table('participantes', function (Blueprint $table) {
+            //
+        });
     }
 };

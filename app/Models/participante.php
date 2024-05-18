@@ -12,12 +12,13 @@ class Participante extends Model
     protected $connection = "mysql";
 
     protected $fillable = [
-        "participante"
+        "participante",
+        "usuario_id"
     ];
 
      //establecer conexion participantes - evento n:m
     public function eventos(){
-        return $this->belongsToMany(Evento::class, "participante");
+        return $this->belongsToMany(Evento::class, "evento_participante");
     }
     //conectar participante con el usuario
     public function usuario(){

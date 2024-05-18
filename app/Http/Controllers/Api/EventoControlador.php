@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Models\Evento;
 use App\Http\Controllers\Controller;
+use App\Models\Participante;
 
 class EventoControlador extends Controller
 {
@@ -70,7 +71,7 @@ class EventoControlador extends Controller
             "tipo" => "required|string",
             "asistencia" => "required|boolean",
             "fecha" => "required|date",
-            "participantes" => "required|array",
+            //"participantes" => "required|array",
             "elementos" => "required|array",
         ]);
         if ($validator-> fails()){
@@ -88,7 +89,7 @@ class EventoControlador extends Controller
                     "tipo" => $request -> tipo,
                     "asistencia" => $request -> asistencia,
                     "fecha" => $request -> fecha,
-                    "participantes" => json_encode($request -> participantes),
+                    //"participantes" => json_encode($request -> participantes),
                     "elementos" => json_encode($request -> elementos),
                 ]);
 
@@ -127,11 +128,11 @@ class EventoControlador extends Controller
 
     //Ver evento (singular)
     public function leer($id){
-        $usuario = Evento::find($id);
-        if($usuario){
+        $evento = Evento::find($id);
+        if($evento){
             return response()->json([
                 "status" => 200,
-                "usuario" => $evento
+                "evento" => $evento
             ], 200);
         }
         else{
@@ -165,5 +166,32 @@ class EventoControlador extends Controller
             ], 500);
         }
         return redirect()->route("evento.show", $evento);
+    }
+    //añadir participantes 2 (a través de boton)
+    public function añadirParticipante(Request $request, $id_evento){
+        $evento = Evento::find($id_evento);
+        $nombreParticipante = $request -> input("nombreParticipante");
+        $participante = Participante::where("participante", $nombreParticipante)->first();
+        if ($participante){
+            if (!$evento->participantes->contains($participante->id)){
+                $evento->participantes()->attach($participante);
+                return response()->json([
+                    "status"=> 200,
+                    "mensaje"=>"participante agregado con éxito"
+                ]);
+            }
+            else {
+                return response()->json([
+                    "status"=> 500,
+                    "mensaje"=>"participante ya introducido"
+                ]);
+            }
+        }
+        else{
+            return response()->json([
+                "status"=> 404,
+                "mensaje"=>"nombre no encontrado"
+            ]);
+        }
     }
 }
