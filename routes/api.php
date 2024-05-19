@@ -23,12 +23,12 @@ Route::post("autenticar", [UsuarioControlador::class, "autenticar"]);
 Route::post("logout", [UsuarioControlador::class, "logout"]);
 
 //Eventos
-Route::post("evento",[EventoControlador::class, "evento"]);
+Route::post("evento",[EventoControlador::class, "crearEvento"]);
 Route::get("evento", [EventoControlador::class, "verEvento"]);
 Route::put("evento/editar/{id}",[EventoControlador::class, "editar"]);
 Route::delete("evento/eliminar/{id}",[EventoControlador::class, "eliminar"]);
 Route::get("evento/{id}",[EventoControlador::class, "leer"]);
-Route::post("evento/{id}/participantes",[EventoControlador::class], "añadirParticipante");
+Route::post("evento/{id}/participantes",[EventoControlador::class, "añadirParticipante"]);
 
 //participante
 Route::post("participante",[ParticipanteControlador::class, "addParticipante"]);

@@ -25,6 +25,6 @@ class Evento extends Model
     //establecer conexion evento - participantes
     // participante como los usuarios registrados entre las bases de datos
     public function participantes(){
-        return $this -> belongsToMany(Participante::class, "evento_participante");
+        return $this -> belongsToMany(Participante::class, "evento_participante", "evento_id", "participante_id");
     }
 }

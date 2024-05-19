@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('evento_participante', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("evento_id")->constrained(); //toma el id de tabla eventos
-            $table->foreignId("participantes_id")->constrained(); //toma el id de tabla participantes
+
             $table->timestamps();
         });
         Schema::table('evento_participante', function (Blueprint $table) {
             $table->foreignId("evento_id")->constrained(); //toma el id de tabla eventos
-            $table->foreignId("participantes_id")->constrained(); //toma el id de tabla participantes
+            $table->foreignId("participante_id")->constrained(); //toma el id de tabla participantes
         });
     }
     /**
