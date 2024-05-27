@@ -6,16 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected $connection = "mysql";
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('usuarios', function (Blueprint $table) {
+        Schema::create('eventos', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("email");
-            $table->string("password");
+            $table->string("nombre");
+            $table->string("tipo");
+            $table->boolean("asistencia");
+            $table->date("fecha");
+           // $table->array("participantes");
+            $table->json("elementos");
             $table->timestamps();
         });
     }
@@ -25,6 +29,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('eventos');
     }
+
+
 };

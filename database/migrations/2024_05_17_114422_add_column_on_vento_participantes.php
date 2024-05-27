@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usuarios', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("email");
-            $table->string("password");
-            $table->timestamps();
+        Schema::table('evento_participantes', function (Blueprint $table) {
+            $table->foreignId("evento_id")->constrained(); //toma el id de tabla eventos
+            $table->foreignId("participantes_id")->constrained(); //toma el id de tabla participantes
         });
     }
 
