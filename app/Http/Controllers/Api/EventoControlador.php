@@ -11,6 +11,7 @@ use App\Models\Usuario;
 class EventoControlador extends Controller
 {
     //Crear evento (correcto------------------------------------------------------------------------------------------------)
+    //cambiar asistencia por (capacidad de modificacion por parte de todos los asistenetes [Encontrar mejor nombre])
     public function CrearEvento(Request $request){
         $evento = Evento::create([
             "nombre" => $request -> nombre,
