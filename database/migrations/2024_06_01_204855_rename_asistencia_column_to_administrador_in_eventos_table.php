@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('participantes', function (Blueprint $table) {
-            //
-            $table->foreignId("usuario_id")->constrained()->nullable();
+        Schema::table('eventos', function (Blueprint $table) {
+            $table->renameColumn("asistencia", "administrador");
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('participantes', function (Blueprint $table) {
+        Schema::table('eventos', function (Blueprint $table) {
             //
         });
     }
