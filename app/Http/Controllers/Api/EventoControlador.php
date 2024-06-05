@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Evento;
@@ -133,10 +133,9 @@ class EventoControlador extends Controller
     public function leer($id){
         $evento = Evento::find($id);
         if($evento){
-            return response()->json([
-                "status" => 200,
-                "evento" => $evento
-            ], 200);
+            return response()->json(
+                 $evento
+            );
         }
         else{
             return response() -> json([
@@ -146,7 +145,7 @@ class EventoControlador extends Controller
         }
     }
 
-    //añadir participantes 2 (obtener id no comprobado hasta vista)(comprado funcionamiento)------------------------------------------------------------------------
+    //añadir participantes 2 (obtener id no comprobado hasta vista)(comprobado funcionamiento)------------------------------------------------------------------------
     public function añadirParticipante(Request $request, $id_evento){
         $token= $request->bearerToken();
         $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
@@ -185,7 +184,7 @@ class EventoControlador extends Controller
 
     //ver participantes del evento
 
-    public function verParticipantes($id_evento){ //quizas haya que añadir Request (no comprobado)
+    public function verParticipantes(Request $request, $id_evento){
         $token= $request->bearerToken();
         $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
         if(!$usuario){
@@ -199,7 +198,7 @@ class EventoControlador extends Controller
             $participantes = $evento->participantes;
             return response()->json([
                 "status"=> 200,
-                "participantes"=>$participantes
+                "mensaje"=>$participantes
             ]);
         }
         else{

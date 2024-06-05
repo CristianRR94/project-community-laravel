@@ -27,11 +27,12 @@ Route::post("evento",[EventoControlador::class, "crearEvento"]);
 Route::get("evento", [EventoControlador::class, "verEvento"]);
 Route::put("evento/editar/{id}",[EventoControlador::class, "editar"]);
 Route::delete("evento/eliminar/{id}",[EventoControlador::class, "eliminar"]);
-Route::get("evento/{id}",[EventoControlador::class, "leer"]);
+Route::get("evento/{id}",[EventoControlador::class, "leer"]); //ver un solo evento
 Route::post("evento/{id}/participantes",[EventoControlador::class, "añadirParticipante"]);
+Route::get("evento/{id}/participantes",[EventoControlador::class, "verParticipantes"]);
 
 //participante
 Route::post("participante",[ParticipanteControlador::class, "addParticipante"]);
-Route::get("participante",[ParticipanteControlador::class, "verParticipantes"]);
+Route::get("participante",[ParticipanteControlador::class, "verParticipante"]);
 
 
