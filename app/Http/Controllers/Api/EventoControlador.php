@@ -12,12 +12,19 @@ class EventoControlador extends Controller
 {
     //Crear evento (correcto------------------------------------------------------------------------------------------------)
     public function CrearEvento(Request $request){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if(!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
         $evento = Evento::create([
             "nombre" => $request -> nombre,
             "tipo" => $request -> tipo,
-            "asistencia" => $request -> asistencia,
+            "administrador" => $request -> administrador,
             "fecha" => $request -> fecha,
-            //"participantes" => json_encode($request -> participantes),
             "elementos" => json_encode($request -> elementos),
         ]);
         //añadir directamente al creador como participante
@@ -54,10 +61,18 @@ class EventoControlador extends Controller
 
     //Modificar eventos
     public function update(Request $request, int $id){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if(!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
         $validator = Validator::make($request->all(), [
             "nombre" => "required|string",
             "tipo" => "required|string",
-            "asistencia" => "required|boolean",
+            "administrador" => "required|boolean",
             "fecha" => "required|date",
             //"participantes" => "required|array",
             "elementos" => "required|array",
@@ -75,7 +90,7 @@ class EventoControlador extends Controller
                 $evento -> update([
                     "nombre" => $request -> nombre,
                     "tipo" => $request -> tipo,
-                    "asistencia" => $request -> asistencia,
+                    "administrador" => $request -> administrador,
                     "fecha" => $request -> fecha,
                     //"participantes" => json_encode($request -> participantes),
                     "elementos" => json_encode($request -> elementos),
@@ -118,10 +133,9 @@ class EventoControlador extends Controller
     public function leer($id){
         $evento = Evento::find($id);
         if($evento){
-            return response()->json([
-                "status" => 200,
-                "evento" => $evento
-            ], 200);
+            return response()->json(
+                 $evento
+            );
         }
         else{
             return response() -> json([
@@ -131,12 +145,21 @@ class EventoControlador extends Controller
         }
     }
 
-    //añadir participantes 2 (obtener id no comprobado hasta vista)(comprado funcionamiento)------------------------------------------------------------------------
-    public function añadirParticipante(Request $request, $id_evento){
+    //añadir participantes 2 (obtener id no comprobado hasta vista)(comprobado funcionamiento)------------------------------------------------------------------------
+    public function anadirParticipante(Request $request, $id_evento){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if(!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
         $evento = Evento::find($id_evento);
         $nombreParticipante = $request -> input("nombreParticipante");
         $participante = Participante::where("participante", $nombreParticipante)->first();
         if ($participante){
+            //si el evento no contiene el id del participante:
             if (!$evento->participantes->contains($participante->id)){
                 $evento->participantes()->attach($participante);
                 return response()->json([
@@ -162,13 +185,21 @@ class EventoControlador extends Controller
 
     //ver participantes del evento
 
-    public function verParticipantes($id_evento){ //quizas haya que añadir Request (no comprobado)
+    public function verParticipantes(Request $request, $id_evento){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if(!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
         $evento = Evento::find($id_evento);
         if ($evento){
             $participantes = $evento->participantes;
             return response()->json([
                 "status"=> 200,
-                "participantes"=>$participantes
+                "mensaje"=>$participantes
             ]);
         }
         else{
