@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 //Route::middleware(["api", "web"])->group(function(){});
+//Usuario
 Route::get("usuarios",[UsuarioControlador::class, "usuarios"]); //listar
 Route::post("usuarios",[UsuarioControlador::class, "crearUsuario"]); //crear usuario y participante
 Route::get("usuarios/{id}",[UsuarioControlador::class, "leer"]);
@@ -28,7 +29,7 @@ Route::get("evento", [EventoControlador::class, "verEvento"]);
 Route::put("evento/editar/{id}",[EventoControlador::class, "editar"]);
 Route::delete("evento/eliminar/{id}",[EventoControlador::class, "eliminar"]);
 Route::get("evento/{id}",[EventoControlador::class, "leer"]); //ver un solo evento
-Route::post("evento/{id}/participantes",[EventoControlador::class, "añadirParticipante"]);
+Route::post("evento/{id}/participante",[EventoControlador::class, "anadirParticipante"]);
 Route::get("evento/{id}/participantes",[EventoControlador::class, "verParticipantes"]);
 
 //participante

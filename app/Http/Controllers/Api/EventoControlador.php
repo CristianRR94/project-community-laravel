@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Models\Evento;
@@ -146,7 +146,7 @@ class EventoControlador extends Controller
     }
 
     //añadir participantes 2 (obtener id no comprobado hasta vista)(comprobado funcionamiento)------------------------------------------------------------------------
-    public function añadirParticipante(Request $request, $id_evento){
+    public function anadirParticipante(Request $request, $id_evento){
         $token= $request->bearerToken();
         $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
         if(!$usuario){
@@ -159,6 +159,7 @@ class EventoControlador extends Controller
         $nombreParticipante = $request -> input("nombreParticipante");
         $participante = Participante::where("participante", $nombreParticipante)->first();
         if ($participante){
+            //si el evento no contiene el id del participante:
             if (!$evento->participantes->contains($participante->id)){
                 $evento->participantes()->attach($participante);
                 return response()->json([
