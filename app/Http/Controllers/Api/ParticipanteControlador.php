@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Models\Usuario;
+use App\Http\Controllers\Controller;
+use App\Models\Participante;
+use App\Models\Evento;
 
 class ParticipanteControlador extends Controller
 {
@@ -24,4 +28,5 @@ class ParticipanteControlador extends Controller
              ], 200);
         }
     }
+
 }

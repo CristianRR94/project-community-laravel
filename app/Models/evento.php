@@ -18,7 +18,6 @@ class Evento extends Model
         "imagen",
         "administrador",
         "fecha",
-        //"participantes",
         "elementos",
 
     ];

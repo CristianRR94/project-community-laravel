@@ -209,4 +209,39 @@ class EventoControlador extends Controller
             ]);
         }
     }
+        //mostrar los eventos del usuario
+    public function verParticipantesEvento(Request $request){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if(!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
+        $eventos = $usuario->eventos;
+        return  response()->json([
+                "status"=> 200,
+                "mensaje"=>$eventos
+        ],200);
+    }
+
+      //mostrar eventos del usuario (v2)
+      public function verParticipanteEventos(Request $request ){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if(!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
+        $participante = Participante::where("usuario_id", $usuario->id)->first();
+        $eventos = $participante->eventos;
+        return  response()->json([
+            "status"=> 200,
+            "mensaje"=>$eventos
+        ],200);
+    }
+
 }

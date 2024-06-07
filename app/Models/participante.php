@@ -18,10 +18,12 @@ class Participante extends Model
 
      //establecer conexion participantes - evento n:m
     public function eventos(){
-        return $this->belongsToMany(Evento::class, "evento_participante");
+        return $this->belongsToMany(Evento::class, "evento_participante", "participante_id", "evento_id");
     }
     //conectar participante con el usuario
     public function usuario(){
         return $this->belongsTo(Usuario::class);
     }
+
+
 }
