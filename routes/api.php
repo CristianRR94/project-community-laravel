@@ -26,13 +26,13 @@ Route::post("logout", [UsuarioControlador::class, "logout"]);
 //Eventos
 Route::post("evento",[EventoControlador::class, "crearEvento"]);
 Route::get("evento", [EventoControlador::class, "verEvento"]);
-Route::put("evento/editar/{id}",[EventoControlador::class, "editar"]);
+Route::put("evento/editar/{id}",[EventoControlador::class, "update"]);
 Route::delete("evento/eliminar/{id}",[EventoControlador::class, "eliminar"]);
 Route::get("evento/{id}",[EventoControlador::class, "leer"]); //ver un solo evento
 Route::post("evento/{id}/participante",[EventoControlador::class, "anadirParticipante"]);
 Route::get("evento/{id}/participantes",[EventoControlador::class, "verParticipantes"]);
-Route::get("participante/evento",[EventoControlador::class, "verParticipantesEvento"]); //solo eventos con usuario
-Route::get("participante/eventos",[EventoControlador::class, "verParticipanteEventos"]);
+//Route::get("participante/evento",[EventoControlador::class, "verParticipantesEvento"]); //solo eventos con usuario(no)
+Route::get("participante/eventos",[EventoControlador::class, "verParticipanteEventos"]);//solo eventos con usuario
 
 //participante
 Route::post("participante",[ParticipanteControlador::class, "addParticipante"]);

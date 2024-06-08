@@ -7,6 +7,7 @@ use App\Models\Evento;
 use App\Http\Controllers\Controller;
 use App\Models\Participante;
 use App\Models\Usuario;
+use Illuminate\Support\Facades\Validator;
 
 class EventoControlador extends Controller
 {
@@ -74,8 +75,7 @@ class EventoControlador extends Controller
             "tipo" => "required|string",
             "administrador" => "required|boolean",
             "fecha" => "required|date",
-            //"participantes" => "required|array",
-            "elementos" => "required|array",
+            //"elementos" => "array|string",
         ]);
         if ($validator-> fails()){
             return response()->json([
@@ -92,7 +92,6 @@ class EventoControlador extends Controller
                     "tipo" => $request -> tipo,
                     "administrador" => $request -> administrador,
                     "fecha" => $request -> fecha,
-                    //"participantes" => json_encode($request -> participantes),
                     "elementos" => json_encode($request -> elementos),
                 ]);
 
@@ -183,7 +182,7 @@ class EventoControlador extends Controller
         }
     }
 
-    //ver participantes del evento
+    //ver participantes del evento(correcto)-----------------------------------------------------------------------------------
 
     public function verParticipantes(Request $request, $id_evento){
         $token= $request->bearerToken();
@@ -209,7 +208,7 @@ class EventoControlador extends Controller
             ]);
         }
     }
-        //mostrar los eventos del usuario
+  /*       //mostrar los eventos del usuario
     public function verParticipantesEvento(Request $request){
         $token= $request->bearerToken();
         $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
@@ -224,9 +223,9 @@ class EventoControlador extends Controller
                 "status"=> 200,
                 "mensaje"=>$eventos
         ],200);
-    }
+    } */
 
-      //mostrar eventos del usuario (v2)
+      //mostrar eventos del usuario (v2)(Correcto)----------------------------------------------------------------------------------------------
       public function verParticipanteEventos(Request $request ){
         $token= $request->bearerToken();
         $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
