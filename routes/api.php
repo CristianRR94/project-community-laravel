@@ -15,9 +15,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get("usuarios",[UsuarioControlador::class, "usuarios"]); //listar
 Route::post("usuarios",[UsuarioControlador::class, "crearUsuario"]); //crear usuario y participante
 Route::get("usuarios/{id}",[UsuarioControlador::class, "leer"]);
-Route::get("usuarios/editar/{id}",[UsuarioControlador::class, "editar"]);
-Route::put("usuarios/editar/{id}",[UsuarioControlador::class, "update"]);
-Route::put("usuarios/editar",[UsuarioControlador::class, "actualizar"]); //cambiar usuario desde la sesion
+Route::get("usuarios/editar1/{id}",[UsuarioControlador::class, "editar"]);
+Route::put("usuarios/editar2/{id}",[UsuarioControlador::class, "update"]);
+Route::put("usuarios/editar/{id}",[UsuarioControlador::class, "actualizar"]); //cambiar usuario desde la sesion
 Route::delete("usuarios/eliminar/{id}",[UsuarioControlador::class, "eliminar"]);
 Route::delete("usuarios/eliminar",[UsuarioControlador::class, "eliminarUsuario"]); //eliminar usuario desde la sesion
 Route::post("autenticar", [UsuarioControlador::class, "autenticar"]);
