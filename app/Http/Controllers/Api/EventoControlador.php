@@ -21,25 +21,42 @@ class EventoControlador extends Controller
                 "mensaje"=>"Usuario no autenticado"
             ], 401);
         }
+        $validator = Validator::make($request->all(), [
+            "nombre" => "required|string",
+            "tipo" => "required|string",
+            "administrador" => "required|boolean",
+            "fecha" => "required|date",
+            "elementos" => "array",
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => 422,
+                "errores" => $validator->messages()
+            ], 422);
+        }
         $evento = Evento::create([
             "nombre" => $request -> nombre,
             "tipo" => $request -> tipo,
             "administrador" => $request -> administrador,
             "fecha" => $request -> fecha,
             "elementos" => json_encode($request -> elementos),
+            "idAdministrador" => $usuario->id
         ]);
         //añadir directamente al creador como participante
-        $token = $request->bearerToken();
-        $usuario = Usuario::where("apiToken", hash("sha256", $token))->first();
-        if($usuario){
-            $participante = Participante::where("usuario_id", $usuario->id)->first();
-            if($participante){
-                $evento->participantes()->attach($participante);
-                return response()->json([
-                    "status"=>200,
-                    "mensaje"=>"participante agregado con exito"
-                ],200);
-            }
+
+        $participante = Participante::where("usuario_id", $usuario->id)->first();
+        if($participante){
+            $evento->participantes()->attach($participante);
+            return response()->json([
+                "status"=>200,
+                "mensaje"=>"participante agregado con exito"
+            ],200);
+        }
+        else {
+            return response()->json([
+                "status"=> 500,
+                "mensaje"=> "Error en la creación del evento"
+            ],500);
         }
     }
 
