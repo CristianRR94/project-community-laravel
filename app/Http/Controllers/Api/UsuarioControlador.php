@@ -104,9 +104,8 @@ class UsuarioControlador extends Controller
         $usuario = Usuario::find($id);
         if($usuario){
             return response()->json([
-                "status" => 200,
-                "usuario" => $usuario
-            ], 200);
+                 $usuario
+            ]);
         }
         else{
             return response() -> json([

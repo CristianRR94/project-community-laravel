@@ -161,7 +161,15 @@ class EventoControlador extends Controller
     }
 
     //Ver evento (singular)
-    public function leer($id){
+    public function leer(Request $request, $id){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if (!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
         $evento = Evento::find($id);
         if($evento){
             return response()->json(
@@ -175,6 +183,38 @@ class EventoControlador extends Controller
             ], 404);
         }
     }
+
+    //ver si el usuario es el administrador
+    public function obtenerAdmin(Request $request, $id){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if (!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
+        $evento = Evento::find($id);
+        if(!$evento){
+            return response() -> json([
+                "status" => 404,
+                "mensaje" => "Evento no encontrado"
+            ], 404);
+        }
+        $primerParticipante = $evento->participantes()->first();
+        if($primerParticipante && $usuario->id === $primerParticipante->usuario_id){
+            return response()->json([
+
+                "mensaje" => true
+            ]);
+        }
+        else{
+            return response()->json([
+                "mensaje" => false
+            ]);
+        }
+        }
+
 
     //añadir participantes 2 (obtener id no comprobado hasta vista)(comprobado funcionamiento)------------------------------------------------------------------------
     public function anadirParticipante(Request $request, $id_evento){
