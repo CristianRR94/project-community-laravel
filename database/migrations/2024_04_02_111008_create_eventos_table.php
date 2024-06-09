@@ -16,9 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string("nombre");
             $table->string("tipo");
-            $table->boolean("asistencia");
+            $table->boolean("administrador");
             $table->date("fecha");
-           // $table->array("participantes");
             $table->json("elementos");
             $table->timestamps();
         });

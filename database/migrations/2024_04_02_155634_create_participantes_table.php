@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::connection("mysql")->create("participantes", function (Blueprint $table) {
             $table->id();
             $table->string("participante");
-            //$table->foreignId("evento_id")->constrained("eventos");
             $table->foreignId("usuario_id")->constrained("usuarios");
             $table->timestamps();
         });

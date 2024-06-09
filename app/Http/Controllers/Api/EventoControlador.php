@@ -40,7 +40,7 @@ class EventoControlador extends Controller
             "administrador" => $request -> administrador,
             "fecha" => $request -> fecha,
             "elementos" => json_encode($request -> elementos),
-            "idAdministrador" => $usuario->id
+
         ]);
         //añadir directamente al creador como participante
 
@@ -127,21 +127,36 @@ class EventoControlador extends Controller
     }
 
     //Eliminar (añadir a través de botón)
-    public function eliminar($id){
+    public function eliminar(Request $request, $id){
+        $token= $request->bearerToken();
+        $usuario= Usuario::where("apiToken", hash("sha256", $token))->first();
+        if(!$usuario){
+            return response()->json([
+                "status"=>401,
+                "mensaje"=>"Usuario no autenticado"
+            ], 401);
+        }
         $evento = Evento::find($id);
 
-        if($evento){
-            $evento -> delete();
-            return response()->json([
-                "mensaje" => "Evento eliminado correctamente"
-            ], 200);
-
-        }
-        else{
+        if(!$evento){
             return response() -> json([
                 "status" => 404,
                 "mensaje" => "Evento no encontrado"
             ], 404);
+        }
+        $primerParticipante = $evento->participantes()->first();
+        if($primerParticipante && $usuario->id === $primerParticipante->usuario_id){
+            $evento->participantes()->detach();
+            $evento -> delete();
+            return response()->json([
+                "mensaje" => "Evento eliminado correctamente"
+            ], 200);
+        }
+        else {
+            return response()->json([
+                "status" => 403,
+                "mensaje" => "No puedes eliminar este evento"
+            ], 403);
         }
     }
 

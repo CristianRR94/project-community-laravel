@@ -21,7 +21,7 @@ Route::put("usuarios/editar/{id}",[UsuarioControlador::class, "actualizar"]); //
 Route::delete("usuarios/eliminar/{id}",[UsuarioControlador::class, "eliminar"]);
 Route::delete("usuarios/eliminar",[UsuarioControlador::class, "eliminarUsuario"]); //eliminar usuario desde la sesion
 Route::post("autenticar", [UsuarioControlador::class, "autenticar"]);
-Route::post("logout", [UsuarioControlador::class, "logout"]);
+Route::post("logout/{id}", [UsuarioControlador::class, "logout"]);
 
 //Eventos
 Route::post("evento",[EventoControlador::class, "crearEvento"]);
